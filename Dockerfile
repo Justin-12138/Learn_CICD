@@ -5,8 +5,8 @@ WORKDIR /app
 # install uv
 RUN pip install --no-cache-dir uv
 
-# copy dependency files first (better cache)
-COPY pyproject.toml uv.lock .python-version ./
+# copy dependency files
+COPY pyproject.toml uv.lock .python-version README.md ./
 
 # install third-party dependencies only
 RUN uv sync --frozen --no-install-project
