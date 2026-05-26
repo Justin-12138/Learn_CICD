@@ -2,10 +2,20 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock .python-version ./
-RUN pip install uv && uv sync --frozen
+# install uv
+RUN pip install --no-cache-dir uv
 
+# copy dependency files first (better cache)
+COPY pyproject.toml uv.lock .python-version ./
+
+# install third-party dependencies only
+RUN uv sync --frozen --no-install-project
+
+# copy source code
 COPY src/ ./src/
+
+# install current project
+RUN uv sync --frozen
 
 EXPOSE 8000
 
